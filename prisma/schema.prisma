@@ -12,7 +12,7 @@ model User {
   name      String
   email     String @unique
   password  String
-  avatarUrl String
+  avatarUrl String?
 
   taskId String?
   Task   Task?   @relation(fields: [taskId], references: [id])
