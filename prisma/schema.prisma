@@ -8,14 +8,13 @@ datasource db {
 }
 
 model User {
-  id        String @id @default(cuid())
+  id        String  @id @default(cuid())
   name      String
-  email     String @unique
+  email     String  @unique
   password  String
   avatarUrl String?
-
-  taskId String?
-  Task   Task?   @relation(fields: [taskId], references: [id])
+  taskId    String?
+  Task      Task?   @relation(fields: [taskId], references: [id])
 }
 
 model Process {
@@ -24,31 +23,30 @@ model Process {
   subtitle    String
   description String
   tasks       Task[]
-  subProcess  SubProcess[]
+  subprocess  SubProcess[]
 }
 
 model SubProcess {
-  id          String @id @default(cuid())
+  id          String   @id @default(cuid())
   name        String
   description String
+  Process     Process? @relation(fields: [processId], references: [id])
+  processId   String?
   tasks       Task[]
-
-  processId String?
-  Process   Process? @relation(fields: [processId], references: [id])
 }
 
 model Task {
   id        String    @id @default(cuid())
   name      String
-  users     User[]
   tag       String
   summary   String
   done      Boolean?  @default(false)
   createdAt DateTime? @default(now())
   expiresIn DateTime
 
-  subProcessId String?
-  processId    String?
+  users        User[]
   Process      Process?    @relation(fields: [processId], references: [id])
+  processId    String?
   SubProcess   SubProcess? @relation(fields: [subProcessId], references: [id])
+  subProcessId String?
 }
