@@ -13,8 +13,7 @@ model User {
   email     String  @unique
   password  String
   avatarUrl String?
-  taskId    String?
-  Task      Task?   @relation(fields: [taskId], references: [id])
+  tasks     Task[]
 }
 
 model Process {
@@ -24,29 +23,48 @@ model Process {
   description String
   tasks       Task[]
   subprocess  SubProcess[]
+  Area        Area?        @relation(fields: [areaId], references: [id])
+  areaId      String?
 }
 
 model SubProcess {
   id          String   @id @default(cuid())
   name        String
   description String
-  Process     Process? @relation(fields: [processId], references: [id])
+  process     Process? @relation(fields: [processId], references: [id])
   processId   String?
   tasks       Task[]
 }
 
 model Task {
-  id        String    @id @default(cuid())
-  name      String
-  tag       String
-  summary   String
-  done      Boolean?  @default(false)
-  createdAt DateTime? @default(now())
-  expiresIn DateTime
+  id            String    @id @default(cuid())
+  name          String
+  tag           String
+  summary       String
+  done          Boolean?  @default(false)
+  createdAt     DateTime? @default(now())
+  expiresIn     DateTime
+  documentation String?
 
   users        User[]
-  Process      Process?    @relation(fields: [processId], references: [id])
+  process      Process?    @relation(fields: [processId], references: [id])
   processId    String?
-  SubProcess   SubProcess? @relation(fields: [subProcessId], references: [id])
+  subprocess   SubProcess? @relation(fields: [subProcessId], references: [id])
   subProcessId String?
+  System       System?     @relation(fields: [systemId], references: [id])
+  systemId     String?
+}
+
+model Area {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  processes   Process[]
+}
+
+model System {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  tasks       Task[]
 }
