@@ -15,11 +15,11 @@ export class UsersService {
         email: true,
         avatarUrl: true,
         password: false,
-        Task: true,
+        tasks: true,
       },
     });
 
-    return user;
+    return user as any;
   }
 
   async findAll(): Promise<UserOutputDto[]> {
@@ -29,9 +29,9 @@ export class UsersService {
         name: true,
         email: true,
         avatarUrl: true,
-        Task: true,
+        tasks: true,
       },
-    });
+    }) as any;
   }
 
   async delete(id: string): Promise<void> {
@@ -41,7 +41,7 @@ export class UsersService {
   async find(id: string): Promise<UserOutputDto> {
     return this.prismaService.user.findFirstOrThrow({
       where: { id },
-      include: { Task: true },
-    });
+      include: { tasks: true },
+    }) as any;
   }
 }
