@@ -11,8 +11,8 @@ import { PrismaFilter } from 'src/errors/prisma/prisma.filter';
 import { TaskCreateDto, TaskOutputDto } from './dto/tasks.dto/tasks.dto';
 import { TasksService } from './tasks.service';
 
-@UseFilters(PrismaFilter)
 @Controller('tasks')
+@UseFilters(PrismaFilter)
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 

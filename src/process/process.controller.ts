@@ -16,6 +16,7 @@ import {
 import { ProcessService } from './process.service';
 
 @Controller('process')
+@UseFilters(PrismaFilter)
 export class ProcessController {
   constructor(private readonly processService: ProcessService) {}
 
