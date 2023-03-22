@@ -20,7 +20,7 @@ export class ProcessController {
   constructor(private readonly processService: ProcessService) {}
 
   @Post()
-  async create(@Body() data: ProcessCreateDto): Promise<any> {
+  async create(@Body() data: ProcessCreateDto): Promise<void> {
     return await this.processService.create(data);
   }
 

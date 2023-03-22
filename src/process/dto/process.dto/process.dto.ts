@@ -6,7 +6,7 @@ import {
   IsString,
 } from 'class-validator';
 
-class Task {
+export class Task {
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -28,6 +28,20 @@ class Task {
   expiresIn: Date;
 }
 
+export class Subprocess {
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @IsNotEmpty()
+  @IsString()
+  description: string;
+
+  @IsNotEmpty()
+  @IsArray({ message: 'Você precisa informar uma array de tarefas' })
+  tasks: Task[];
+}
+
 export class Process {
   @IsNotEmpty()
   @IsString()
@@ -43,11 +57,11 @@ export class Process {
 
   @IsNotEmpty()
   @IsArray()
-  tasks: Array<Task>;
+  tasks: Task[];
 
   @IsOptional()
   @IsArray()
-  subprocess: any; //melhorar
+  subprocess: Process[];
 }
 
 export class ProcessCreateDto extends Process {}

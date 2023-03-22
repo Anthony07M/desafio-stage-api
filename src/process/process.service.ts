@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UtilsService } from 'src/utils/utils.service';
 import {
   ProcessCreateDto,
   ProcessOutputDto,
@@ -7,36 +8,33 @@ import {
 
 @Injectable()
 export class ProcessService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private utilsService: UtilsService,
+  ) {}
 
-  async create(data: ProcessCreateDto): Promise<any> {
-    const { tasks, subprocess, ...rest } = data;
+  async create(data: ProcessCreateDto): Promise<void> {
+    const { subprocess, tasks, ...rest } = data;
 
-    const process = await this.prismaService.process.create({ data: rest });
+    const payloadTask = this.utilsService.formatedPayloadTask(tasks);
+    const payloadSubprocess =
+      this.utilsService.formatedPayloadSubprocess(subprocess);
 
-    const payloadTask = tasks.map((task) => {
-      const { users, ...rest } = task;
-      const connect = users.map((userId) => userId);
-
-      return { ...rest, users: { connect } };
+    await this.prismaService.process.create({
+      data: {
+        ...rest,
+        tasks: {
+          create: payloadTask,
+        },
+        subprocess: {
+          create: payloadSubprocess as any,
+        },
+      },
     });
-
-    for await (const task of payloadTask) {
-      await this.prismaService.task.create({
-        data: {
-          ...task,
-          processId: process.id,
-        },
-        include: {
-          users: true,
-        },
-      });
-    }
-
-    return process;
+    return;
   }
 
-  async findAll(): Promise<Array<ProcessOutputDto>> {
+  async findAll(): Promise<ProcessOutputDto[]> {
     return this.prismaService.process.findMany({
       include: {
         tasks: {
@@ -58,9 +56,34 @@ export class ProcessService {
             },
           },
         },
-        subprocess: true,
+        subprocess: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            tasks: {
+              select: {
+                id: true,
+                name: true,
+                summary: true,
+                tag: true,
+                done: true,
+                createdAt: true,
+                expiresIn: true,
+                users: {
+                  select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    avatarUrl: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
-    });
+    }) as any;
   }
 
   async getProcess(id: string): Promise<ProcessOutputDto> {
@@ -86,9 +109,34 @@ export class ProcessService {
             },
           },
         },
-        subprocess: true,
+        subprocess: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            tasks: {
+              select: {
+                id: true,
+                name: true,
+                summary: true,
+                tag: true,
+                done: true,
+                createdAt: true,
+                expiresIn: true,
+                users: {
+                  select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    avatarUrl: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
-    });
+    }) as any;
   }
 
   async delete(id: string): Promise<void> {
@@ -99,5 +147,6 @@ export class ProcessService {
         tasks: true,
       },
     });
+    return;
   }
 }
