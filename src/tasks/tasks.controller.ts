@@ -21,7 +21,7 @@ export class TasksController {
     @Param('processId') processId: string,
     @Body() data: TaskCreateDto[],
   ): Promise<void> {
-    return this.tasksService.create(processId, data);
+    return await this.tasksService.create(processId, data);
   }
 
   @Get()

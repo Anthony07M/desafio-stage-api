@@ -23,7 +23,7 @@ export class TasksService {
     return;
   }
 
-  async findAll(): Promise<any> {
+  async findAll(): Promise<TaskOutputDto[]> {
     return await this.prismaService.task.findMany({
       select: {
         id: true,

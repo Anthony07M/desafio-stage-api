@@ -34,4 +34,5 @@ export class TaskCreateDto extends Task {
 
 export class TaskOutputDto extends Task {
   id: string;
+  createdAt: Date;
 }
