@@ -66,7 +66,6 @@ export class TasksService {
         createdAt: true,
         expiresIn: true,
         done: true,
-        System: true,
         users: {
           select: {
             id: true,

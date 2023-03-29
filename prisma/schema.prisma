@@ -51,7 +51,6 @@ model Task {
   processId    String?
   subprocess   SubProcess? @relation(fields: [subProcessId], references: [id])
   subProcessId String?
-  systemId     String?
 }
 
 model Area {
