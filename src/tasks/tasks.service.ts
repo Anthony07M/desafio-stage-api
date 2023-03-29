@@ -12,14 +12,21 @@ export class TasksService {
 
   async create(processId: string, data: TaskCreateDto[]): Promise<void> {
     const payloadTasks = this.utilsService.formatedPayloadTask(data);
-    await this.prismaService.process.update({
-      where: { id: processId },
-      data: {
-        tasks: {
-          create: payloadTasks,
-        },
-      },
-    });
+    // await this.prismaService.process.update({
+    //   where: { id: processId },
+    //   data: {
+    //     tasks: {
+    //       create: payloadTasks,
+    //     },
+    //   },
+    // });
+
+    console.log(payloadTasks);
+    for await (const task of payloadTasks) {
+      await this.prismaService.task.create({
+        data: task,
+      });
+    }
     return;
   }
 

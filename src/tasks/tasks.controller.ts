@@ -16,6 +16,11 @@ import { TasksService } from './tasks.service';
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
+  @Post()
+  async creates(@Body() data: TaskCreateDto[]): Promise<void> {
+    return await this.tasksService.create('processId', data);
+  }
+
   @Post(':processId')
   async create(
     @Param('processId') processId: string,
